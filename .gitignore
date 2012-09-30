@@ -1,0 +1,9 @@
+project/boot
+project/plugins/target
+logs
+project/project
+project/target
+target
+tmp
+.history
+dist
