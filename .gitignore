@@ -7,3 +7,6 @@ target
 tmp
 .history
 dist
+
+
+.DS_Store
