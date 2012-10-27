@@ -31,7 +31,9 @@ object Application extends Controller { //
   }
 
   def jobs = Action { implicit request =>
-  	Ok(views.html.index("Scala.IO", "" ))
+    var groupname = "london-scala-jobs"
+  	Ok(views.html.iframewrapper(groupname))
+  	
   }
 
 
