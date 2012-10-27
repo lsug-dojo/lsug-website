@@ -23,6 +23,17 @@ object Application extends Controller { //
     Ok(views.html.index("Scala.IO", "" ))
   }
 
+  def group = Action { implicit request => 
+  	var groupname = "scala-london"
+
+  	Ok (views.html.iframewrapper(groupname))
+
+  }
+
+  def jobs = Action { implicit request =>
+  	Ok(views.html.index("Scala.IO", "" ))
+  }
+
 
   // def meetupLogin = Action {
   //   val login = "https://secure.meetup.com/oauth2/authorize?client_id=6uaao0sbsmt6u6rj17v4lu5u9&response_type=code&redirect_uri=http://localhost:9000/muauth"
