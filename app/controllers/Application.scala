@@ -21,7 +21,7 @@ class Application(meetingService: MeetingService) extends Controller { //
 //  with securesocial.core.SecureSocial{
 
   def index = Action { implicit request =>
-    Ok(views.html.index("Scala.IO", "" ))
+    Ok(views.html.index(meetingService.current, meetingService.past, meetingService.future))
   }
 
   def group = Action { implicit request => 

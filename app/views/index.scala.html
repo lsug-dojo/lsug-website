@@ -1,19 +1,34 @@
-@(message: String, fullName: String)
+@(current: Meeting, past: Seq[Meeting], future: Seq[Meeting], fullName: String = "Scala User")
 
-@main("Welcome to London Scala User Group", fullName ) {
+@import models._
 
+@main("Welcome to London Scala User Group", fullName) {
 
-  <div class="row">
-
-    <div class="span9">
-      <!--Sidebar content-->
-      <div class="well">
-      <span class="label label-success">Something</span>
-      </div>
-      <div class="well">
-      <span class="label label-success">Something</span>
-      </div>
+    <h2>On going Meeting</h2>
+    <div class="row">
+        <div class="span9 meeting current">
+            <h3>@current.name</h3>
+            <p>@current.description</p>
+        </div>
     </div>
 
-  </div>
+    <h2>Incoming Meetings</h2>
+    <div class="row">
+        @future.map{meeting=>
+        <div class="span9 meeting">
+            <h3>@meeting.name</h3>
+            <p>@meeting.description</p>
+        </div>
+        }
+    </div>
+
+    <h2>Past Meetings</h2>
+    <div class="row past">
+        @past.map{meeting=>
+        <div class="span9 meeting">
+                <h3>@meeting.name</h3>
+                <p>@meeting.description</p>
+            </div>
+        }
+    </div>
 }
