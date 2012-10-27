@@ -6,4 +6,11 @@ project/target
 target
 tmp
 .history
-dist
+dist.cache
+.cache
+.project
+.settings/
+.target/
+.classpath
+.target/
+bin/
