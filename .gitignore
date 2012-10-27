@@ -8,8 +8,9 @@ tmp
 .history
 dist
 
-.idea
-.idea_modules
-
-
 .DS_Store
+
+.idea/
+.idea_modules/
+*.iml
+
