@@ -13,6 +13,7 @@ dist
 .cache
 bin/
 dist.cache
+.cache
 .project
 .settings/
 .target/
