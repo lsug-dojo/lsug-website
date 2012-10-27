@@ -11,3 +11,10 @@ dist
 .idea/
 .idea_modules/
 *.iml
+
+.cache
+.classpath
+.project
+.settings/
+.target/
+bin/
