@@ -24,14 +24,14 @@ object Application extends Controller { //
   }
 
   def group = Action { implicit request => 
-  	var groupname = "scala-london"
+  	val groupname = "scala-london"
 
   	Ok (views.html.iframewrapper(groupname))
 
   }
 
   def jobs = Action { implicit request =>
-    var groupname = "london-scala-jobs"
+    val groupname = "london-scala-jobs"
   	Ok(views.html.iframewrapper(groupname))
   	
   }
