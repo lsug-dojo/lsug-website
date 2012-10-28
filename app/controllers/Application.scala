@@ -10,17 +10,18 @@ import scala.util.parsing.json.JSON
 import play.api.libs.json.JsValue
 import play.api.libs.json.Format
 import play.api.libs.json.JsUndefined
+import services.{MockMeetingService, MeetingService}
 
 // case class Event(id: String, time: Long, rsvp: Int, title: String, description: String) {
 //   def descriptionHtml = new Html(description)
 // }
 
-object Application extends Controller { //
+class Application(meetingService: MeetingService) extends Controller { //
 
 //  with securesocial.core.SecureSocial{
-  
+
   def index = Action { implicit request =>
-    Ok(views.html.index("Scala.IO", "" ))
+    Ok(views.html.index(meetingService.current, meetingService.past, meetingService.future))
   }
 
   def group = Action { implicit request => 
@@ -116,6 +117,12 @@ object Application extends Controller { //
 //     def writes(u: Event): JsValue = JsUndefined("TODO")
 
 //   }
+
+
+}
+
+object Application extends Application(MockMeetingService) {
+
 
 
 }

@@ -12,7 +12,8 @@ object ApplicationBuild extends Build {
 	)    
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
-    	resolvers += "sonatype repository" at "https://oss.sonatype.org/content/groups/scala-tools/" 
+      lessEntryPoints <<= baseDirectory(_ / "app" / "assets" / "stylesheets" ** "main.less"),
+    	resolvers += "sonatype repository" at "https://oss.sonatype.org/content/groups/scala-tools/"
     )
 
 }
