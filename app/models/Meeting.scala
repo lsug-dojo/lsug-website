@@ -1,9 +1,5 @@
 package models
 import java.util.Date
 
-case class Meeting (
-	val name : String,
-	val description : String,
-    val time: Date,
-    val event_url: String
-)
+// TODO It is not immutable because Date is not immutable
+case class Meeting (name: String, description: String, time: Date, event_url: String)
