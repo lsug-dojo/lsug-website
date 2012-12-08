@@ -27,7 +27,7 @@
         @past.map{meeting=>
         <div class="span9 meeting">
                 <h3>@meeting.name</h3>
-                <p>@meeting.description</p>
+                <p>@Html(meeting.description)</p>
             </div>
         }
     </div>
