@@ -15,5 +15,4 @@ object MockMeetingService extends MeetingService {
       Meeting("future meeting 2", "future meeting description 2", new Date(), "www.meetup.com"),
       Meeting("future meeting 3", "future meeting description 3", new Date(), "www.meetup.com")
       )
-      
 }
