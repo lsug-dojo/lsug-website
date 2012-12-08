@@ -46,6 +46,14 @@ class Application(meetingService: MeetingService) extends Controller { //
   	Ok(views.html.iframewrapper(groupname))
   	
   }
+  
+   def populateMeetings = Action { request =>
+
+      MeetupImporter.getAllMeetings().map { response =>
+        	val ids = response.map(Meeting.dao.insert(_))
+      }
+     Ok("")  
+  }  
 
 
   // def meetupLogin = Action {
