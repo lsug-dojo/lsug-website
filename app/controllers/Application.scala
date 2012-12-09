@@ -31,7 +31,7 @@ class Application(meetingService: MeetingService) extends Controller { //
 //  with securesocial.core.SecureSocial{
 
   def index = Action { implicit request =>
-    Ok(views.html.index(meetingService.current, Meeting.findAll.toList, meetingService.future))
+    Ok(views.html.index(meetingService.current, Meeting.findAll.toList.reverse, meetingService.future))
   }
 
   def group = Action { implicit request => 

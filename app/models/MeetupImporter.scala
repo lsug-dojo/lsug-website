@@ -15,7 +15,7 @@ object MeetupImporter {
   val key = "24a4b6977821146284c192b5d30"
   val groupId = "1562942"
     
-  def buildEventsRequest(): String = """https://api.meetup.com/2/events?key="""+key+"&group_id="+groupId+"&page=200"
+  def buildEventsRequest(): String = """https://api.meetup.com/2/events?key="""+key+"&group_id="+groupId+"&page=200&status=past"
  
   def getAllMeetingsResponse() = WS.url(buildEventsRequest()).get()
   
