@@ -23,7 +23,7 @@ object MeetupImporter {
     	    val meetings = (response.json \  "results").asOpt[Seq[JsValue]]
     	    
     	    meetings match {
-    	      case Some(seq) => seq.map(parseJsonMeeting(_))
+    	      case Some(seq) => seq.reverse.map(parseJsonMeeting(_))
     	      case _ => Nil
     	    }
      })

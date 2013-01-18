@@ -50,7 +50,7 @@ class Application(meetingService: MeetingService) extends Controller { //
   
    def populateMeetings = Action { request =>
 
-      MeetupImporter.getAllMeetings().map { response =>
+      MeetupImporter.getAllMeetings.map { response =>
         	val ids = response.map(Meeting.dao.insert(_))
       }
      Ok("")  
