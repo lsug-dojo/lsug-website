@@ -8,16 +8,12 @@ object ApplicationBuild extends Build {
     val appVersion      = "1.0-SNAPSHOT"
 
     val appDependencies = Seq(
-      "org.mongodb" % "casbah_2.9.0" % "2.4.1",
-      "se.radley" %% "play-plugins-salat" % "1.1",
-      "com.novus" %% "salat" % "1.9.1"
+      "com.github.tmingos" % "casbah_2.10" % "2.5.0-SNAPSHOT",
+      "se.radley" %% "play-plugins-salat" % "1.2-SNAPSHOT"
       )
 
-    val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
-      lessEntryPoints <<= baseDirectory(_ / "app" / "assets" / "stylesheets" ** "main.less"),
-    	resolvers += "sonatype repository" at "https://oss.sonatype.org/content/groups/scala-tools/",
-    	routesImport += "se.radley.plugin.salat.Binders._",
-        templatesImport += "org.bson.types.ObjectId"
-      )
+  val main = play.Project(appName, appVersion, appDependencies).settings(
+      lessEntryPoints <<= baseDirectory(_ / "app" / "assets" / "stylesheets" ** "main.less")
+  )
 
 }

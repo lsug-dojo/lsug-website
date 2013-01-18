@@ -12,6 +12,7 @@ import play.api.libs.json.JsUndefined
 import services.{MockMeetingService, MeetingService}
 import models._
 import java.util.Date
+import scala.concurrent.ExecutionContext.Implicits.global
 
 // case class Event(id: String, time: Long, rsvp: Int, title: String, description: String) {
 //   def descriptionHtml = new Html(description)

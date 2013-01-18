@@ -4,10 +4,9 @@ package models
 import play.api._
 import play.api.mvc._
 import play.api.libs.ws._
-import play.api.libs.concurrent.Promise
 import play.api.libs.json.JsValue
 import java.util.Date
-
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object MeetupImporter {
   
@@ -19,7 +18,7 @@ object MeetupImporter {
  
   def getAllMeetingsResponse() = WS.url(buildEventsRequest()).get()
   
-  def getAllMeetings(): Promise[Seq[Meeting]]= {
+  def getAllMeetings() = {
     getAllMeetingsResponse().map( response => {
     	    val meetings = (response.json \  "results").asOpt[Seq[JsValue]]
     	    

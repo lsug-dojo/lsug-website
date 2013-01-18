@@ -18,4 +18,5 @@ dist
 .idea/
 .idea_modules/
 *.iml
+RUNNING_PID
 
