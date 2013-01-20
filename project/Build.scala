@@ -8,7 +8,9 @@ object ApplicationBuild extends Build {
     val appVersion      = "1.0-SNAPSHOT"
 
     val appDependencies = Seq(
+      // "org.mongodb" % "casbah" % "2.5.0",
       "com.github.tmingos" % "casbah_2.10" % "2.5.0-SNAPSHOT",
+      // "com.novus" %% "salat" % "1.9.1",
       "se.radley" %% "play-plugins-salat" % "1.2-SNAPSHOT"
       )
 
