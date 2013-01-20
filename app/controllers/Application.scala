@@ -5,6 +5,8 @@ import services.{MockMeetingService, MeetingService}
 import models._
 import java.util.Date
 import scala.concurrent.ExecutionContext.Implicits.global
+import concurrent.{Await, Future}
+import concurrent.duration.Duration
 
 // case class Event(id: String, time: Long, rsvp: Int, title: String, description: String) {
 //   def descriptionHtml = new Html(description)
@@ -22,7 +24,7 @@ class Application(meetingService: MeetingService) extends Controller {
 //  with securesocial.core.SecureSocial{
 
   def index = Action { implicit request =>
-    Ok(views.html.index(meetingService.current ))
+    Ok(views.html.index(nextTalk ))
   }
 
   def group = Action { implicit request => 
@@ -49,9 +51,14 @@ class Application(meetingService: MeetingService) extends Controller {
   def pastTalks =  Meeting.findAll().filterNot( _.name.contains("ojo")).toList.reverse
 
 
-  def upcomingMeetings = {
-    MeetupImporter.upcomingMeetings
+  def upcomingMeetings: Seq[Meeting] = {
+    val f = MeetupImporter.upcomingMeetings
+    Await.result( f, Duration("3 seconds")).filterNot( _.name.contains("ojo")).reverse.tail
+  }
 
+  def nextTalk: Meeting = {
+    val f = MeetupImporter.upcomingMeetings
+    Await.result( f, Duration("3 seconds")).filterNot( _.name.contains("ojo")).reverse.head
   }
 
 
