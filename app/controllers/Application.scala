@@ -1,9 +1,8 @@
 package controllers
-
+import com.mongodb.casbah.Imports._
 import play.api._
 import play.api.mvc._
 import play.api.libs.ws._
-
 import play.api.templates.Html
 import scala.io.Source
 import scala.util.parsing.json.JSON
@@ -11,6 +10,8 @@ import play.api.libs.json.JsValue
 import play.api.libs.json.Format
 import play.api.libs.json.JsUndefined
 import services.{MockMeetingService, MeetingService}
+import models._
+import java.util.Date
 
 // case class Event(id: String, time: Long, rsvp: Int, title: String, description: String) {
 //   def descriptionHtml = new Html(description)
@@ -18,10 +19,19 @@ import services.{MockMeetingService, MeetingService}
 
 class Application(meetingService: MeetingService) extends Controller { //
 
+  
+  
+  def dummy = Action {implicit request =>
+    val myMeeting = Meeting("A dummy meeting", "past meeting stored in Mongo", new Date(), "www.meetup.com")
+    val result = Meeting.dao.insert(myMeeting)
+    
+    Ok("The new ID is " + result.getOrElse("FAILED").toString())  
+  }
+  
 //  with securesocial.core.SecureSocial{
 
   def index = Action { implicit request =>
-    Ok(views.html.index(meetingService.current, meetingService.past, meetingService.future))
+    Ok(views.html.index(meetingService.current, Meeting.findAll.toList, meetingService.future))
   }
 
   def group = Action { implicit request => 
@@ -36,6 +46,14 @@ class Application(meetingService: MeetingService) extends Controller { //
   	Ok(views.html.iframewrapper(groupname))
   	
   }
+  
+   def populateMeetings = Action { request =>
+
+      MeetupImporter.getAllMeetings().map { response =>
+        	val ids = response.map(Meeting.dao.insert(_))
+      }
+     Ok("")  
+  }  
 
 
   // def meetupLogin = Action {
@@ -122,7 +140,5 @@ class Application(meetingService: MeetingService) extends Controller { //
 }
 
 object Application extends Application(MockMeetingService) {
-
-
 
 }

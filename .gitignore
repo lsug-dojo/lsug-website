@@ -7,6 +7,11 @@ target
 tmp
 .history
 dist
+.classpath
+.project
+.settings/
+.target/
+.cache
 
 .DS_Store
 
