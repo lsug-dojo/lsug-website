@@ -1,37 +1,30 @@
 package controllers
-import com.mongodb.casbah.Imports._
-import play.api._
+
 import play.api.mvc._
-import play.api.libs.ws._
-import play.api.templates.Html
-import scala.io.Source
-import scala.util.parsing.json.JSON
-import play.api.libs.json.JsValue
-import play.api.libs.json.Format
-import play.api.libs.json.JsUndefined
 import services.{MockMeetingService, MeetingService}
 import models._
 import java.util.Date
+import scala.concurrent.ExecutionContext.Implicits.global
+import concurrent.{Await, Future}
+import concurrent.duration.Duration
 
 // case class Event(id: String, time: Long, rsvp: Int, title: String, description: String) {
 //   def descriptionHtml = new Html(description)
 // }
 
-class Application(meetingService: MeetingService) extends Controller { //
+class Application(meetingService: MeetingService) extends Controller {
 
-  
-  
   def dummy = Action {implicit request =>
     val myMeeting = Meeting("A dummy meeting", "past meeting stored in Mongo", new Date(), "www.meetup.com")
     val result = Meeting.dao.insert(myMeeting)
     
-    Ok("The new ID is " + result.getOrElse("FAILED").toString())  
+    Ok("The new ID is " + result.getOrElse("FAILED").toString)
   }
   
 //  with securesocial.core.SecureSocial{
 
   def index = Action { implicit request =>
-    Ok(views.html.index(meetingService.current, Meeting.findAll.toList, meetingService.future))
+    Ok(views.html.index(nextTalk ))
   }
 
   def group = Action { implicit request => 
@@ -43,18 +36,36 @@ class Application(meetingService: MeetingService) extends Controller { //
 
   def jobs = Action { implicit request =>
     val groupname = "london-scala-jobs"
-  	Ok(views.html.iframewrapper(groupname))
+  	Ok("Jobs")//views.html.iframewrapper(groupname))
   	
   }
   
    def populateMeetings = Action { request =>
 
-      MeetupImporter.getAllMeetings().map { response =>
+      MeetupImporter.pastMeetings.map { response =>
         	val ids = response.map(Meeting.dao.insert(_))
       }
-     Ok("")  
-  }  
+     Ok("")
+  }
 
+  def pastTalks =  Meeting.findAll().filterNot( _.name.contains("ojo")).toList.reverse
+
+
+  def upcomingMeetings: Seq[Meeting] = {
+    val f = MeetupImporter.upcomingMeetings
+    Await.result( f, Duration("3 seconds")).filterNot( _.name.contains("ojo")).reverse.tail
+  }
+
+  def nextTalk: Meeting = {
+    val f = MeetupImporter.upcomingMeetings
+    Await.result( f, Duration("3 seconds")).filterNot( _.name.contains("ojo")).reverse.head
+  }
+
+
+  def monthName(n:Int):String = {
+    val months = new java.text.DateFormatSymbols().getShortMonths
+    months(n)
+  }
 
   // def meetupLogin = Action {
   //   val login = "https://secure.meetup.com/oauth2/authorize?client_id=6uaao0sbsmt6u6rj17v4lu5u9&response_type=code&redirect_uri=http://localhost:9000/muauth"

@@ -1,34 +1,51 @@
-@(current: Meeting, past: Seq[Meeting], future: Seq[Meeting], fullName: String = "Scala User")
+@(current: Meeting, fullName: String = "Scala User")
 
 @import models._
+@import scala.concurrent.ExecutionContext.Implicits.global
+
 
 @main("Welcome to London Scala User Group", fullName) {
 
-    <h2>On going Meeting</h2>
+    <h2>Next Meeting</h2>
     <div class="row">
+
         <div class="span9 meeting current">
             <h3>@current.name</h3>
-            <p>@current.description</p>
+            <p>@Html(current.description)</p>
         </div>
     </div>
 
-    <h2>Incoming Meetings</h2>
+    <h2>Upcoming Meetings</h2>
     <div class="row">
-        @future.map{meeting=>
-        <div class="span9 meeting">
-            <h3>@meeting.name</h3>
-            <p>@meeting.description</p>
+    @Application.upcomingMeetings.map { meeting =>
+        <div class="span9 meeting current">
+                <h3> @meeting.name </h3>
+                <p> @Html(meeting.description) </p>
+            </div>
         </div>
-        }
+    }
+
     </div>
 
     <h2>Past Meetings</h2>
-    <div class="row past">
-        @past.map{meeting=>
-        <div class="span9 meeting">
-                <h3>@meeting.name</h3>
-                <p>@Html(meeting.description)</p>
+
+    <div class="accordion" id="accordion2">
+    @Application.pastTalks.zipWithIndex.map { pm =>
+        <div class="accordion-group">
+            <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href=' @( "#collapseOne" + pm._2 )'>
+                @Application.monthName( pm._1.time.getMonth )  @( 1900 + pm._1.time.getYear) -  @pm._1.name
+            </a>
             </div>
-        }
+            <div id='@("collapseOne" + pm._2 )' class="accordion-body collapse">
+                <div class="accordion-inner">
+                <h5>Date: @pm._1.time</h5>
+                @Html( pm._1.description)
+                </div>
+            </div>
+        </div>
+    }
     </div>
+
+
 }

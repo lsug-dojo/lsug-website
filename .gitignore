@@ -16,6 +16,8 @@ dist
 .DS_Store
 
 .idea/
+.idea/compiler.xml
 .idea_modules/
 *.iml
+RUNNING_PID
 
