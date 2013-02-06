@@ -2,3 +2,48 @@ This is your new Play 2.0 application
 =====================================
 
 This file will be packaged with your application, when using `play dist`.
+
+
+
+Configuring MongoLabs with Play
+
+How to configure MongoDB with Play when running MongoLabs addon in Heroku.
+
+Heroku gives you a default name for your database.  If you look in the configuraiton for your Heroku application then you can see the URI
+
+heroku config
+
+or
+
+herok config ¦ grep mongo
+
+ This will give you a URI that is also set in the environment variable MONGOLAB_URI.
+
+Is it enough to just add this to the Procfile for you Play app
+
+ -Dmongodb.uri=$MONGOLAB_URI
+
+Or do you also need to include it in your play framework configuration in config/application.conf
+
+# MongoURI
+# ~~~~~
+# a MongoURI can also be used http://www.mongodb.org/display/DOCS/Connections
+# mongodb.default.uri = "mongodb://127.0.0.1:27017,mongodb.org:1337/salat-test"
+# mongodb.uri="mongodb://127.0.0.1:27017/heroku_app8030104"
+mongodb.default.uri="mongodb://heroku_app8030104:u37aro46ggr991mvgdmb5on5n9@ds037987.mongolab.com:37987/heroku_app8030104"
+
+
+Using the universal resource indicator directly in the application.conf will work when running play2 / mongo application on your development machine and heroku.  However, there is an obvious issue that you may not want to change the contents of your app on heroku and use the same db for both environments leads to this issue.
+
+If you have a seperate mongodb locally, then you have more scope for experimenting.
+
+
+You can have different configs for local and heroku, but its not as nice as having a common configuation.  It can also lead to deploying the wrong config to github / heroku with unpleasent side effects.
+
+
+If you assume you have mongo also running locally, in theory so long as you have the same database name and are using the defaults, then it should work by having a common configuration.
+
+mongodb.default.uri="mongodb://127.0.0.1:27017/dbname"
+
+
+Can you just get the Procfile to set things up.  This would require the running of the program to send an environment variable to the play framework when run.
