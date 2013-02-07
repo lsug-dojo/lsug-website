@@ -12,6 +12,10 @@ import concurrent.duration.Duration
 //   def descriptionHtml = new Html(description)
 // }
 
+
+// Neo4j link
+// http://b51498187:fd6b46e88@5701820d8.hosted.neo4j.org:7976
+
 class Application(meetingService: MeetingService) extends Controller {
 
   def dummy = Action {implicit request =>
@@ -48,19 +52,25 @@ class Application(meetingService: MeetingService) extends Controller {
      Ok("")
   }
 
-  def pastTalks =  Meeting.findAll().filterNot( _.name.contains("ojo")).toList.reverse
+  def pastTalks =  Meeting.findAll().filterNot( isDojo ).toList.reverse
 
+
+  val timeout = Duration("3 seconds")
 
   def upcomingMeetings: Seq[Meeting] = {
     val f = MeetupImporter.upcomingMeetings
-    Await.result( f, Duration("3 seconds")).filterNot( _.name.contains("ojo")).reverse.tail
+    Await.result( f, timeout ).filterNot( isDojo ).reverse.tail
   }
 
   def nextTalk: Meeting = {
     val f = MeetupImporter.upcomingMeetings
-    Await.result( f, Duration("3 seconds")).filterNot( _.name.contains("ojo")).reverse.head
+    Await.result( f, timeout).filterNot( isDojo ).reverse.head
   }
 
+
+  def isDojo(  meeting:Meeting ): Boolean = {
+      meeting.name.contains("ojo")
+  }
 
   def monthName(n:Int):String = {
     val months = new java.text.DateFormatSymbols().getShortMonths
