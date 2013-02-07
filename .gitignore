@@ -1,3 +1,5 @@
+.idea/
+.idea/compiler.xml
 project/boot
 project/plugins/target
 logs
@@ -12,11 +14,7 @@ dist
 .settings/
 .target/
 .cache
-
 .DS_Store
-
-.idea/
-.idea/compiler.xml
 .idea_modules/
 *.iml
 RUNNING_PID
