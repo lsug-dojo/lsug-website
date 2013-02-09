@@ -24,5 +24,6 @@ object ApplicationBuild extends Build {
       resolvers += "sonatype repository" at "http://oss.sonatype.org/content/repositories/snapshots",
       resolvers += "typesafe artefactory" at "http://typesafe.artifactoryonline.com/typesafe/repo"
   )
+resolvers += "jgit-repository" at "http://download.eclipse.org/jgit/maven"
 
 }
