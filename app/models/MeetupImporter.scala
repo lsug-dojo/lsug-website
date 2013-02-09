@@ -41,6 +41,7 @@ object MeetupImporter {
 
     getAllMeetingsResponse.map( response => {
       val meetings = (response.json \  "results").asOpt[Seq[JsValue]]
+      //println(s"$meetings")
 
       meetings match {
         case Some(seq) => seq.reverse.map(parseJsonMeeting(_))
@@ -55,9 +56,11 @@ object MeetupImporter {
     val description = (value \ "description").asOpt[String]
     val eventUrl = (value \ "event_url").asOpt[String]
     val date = (value \ "time").asOpt[Long]
+    val id = (value \ "id").asOpt[String]
+    println(s"Response for $name, $id")
 
-    (name, description, date, eventUrl) match {
-      case (Some(n), Some(desc), Some(timestamp), Some(url)) =>  Meeting(n, desc, new Date(timestamp), url)
+    (name, description, date, eventUrl, id) match {
+      case (Some(n), Some(desc), Some(timestamp), Some(url), Some(id)) =>  Meeting(n, desc, new Date(timestamp), url, id)
       case _ => throw new IllegalStateException("Invalid meeting")
     }
 

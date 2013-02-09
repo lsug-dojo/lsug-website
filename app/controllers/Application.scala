@@ -19,7 +19,7 @@ import concurrent.duration.Duration
 class Application(meetingService: MeetingService) extends Controller {
 
   def dummy = Action {implicit request =>
-    val myMeeting = Meeting("A dummy meeting", "past meeting stored in Mongo", new Date(), "www.meetup.com")
+    val myMeeting = Meeting("A dummy meeting", "past meeting stored in Mongo", new Date(), "www.meetup.com", "dummy id")
     val result = Meeting.dao.insert(myMeeting)
     
     Ok("The new ID is " + result.getOrElse("FAILED").toString)
