@@ -7,6 +7,8 @@ import java.util.Date
 import scala.concurrent.ExecutionContext.Implicits.global
 import concurrent.{Await, Future}
 import concurrent.duration.Duration
+import models.MeetupImporter.fetchMeetings
+import scala.concurrent.duration._
 
 // case class Event(id: String, time: Long, rsvp: Int, title: String, description: String) {
 //   def descriptionHtml = new Html(description)
@@ -19,7 +21,7 @@ import concurrent.duration.Duration
 class Application(meetingService: MeetingService) extends Controller {
 
   def dummy = Action {implicit request =>
-    val myMeeting = Meeting("A dummy meeting", "past meeting stored in Mongo", new Date(), "www.meetup.com", "dummy id")
+    val myMeeting = Meeting("A dummy meeting", "past meeting stored in Mongo", new Date(), "www.meetup.com", "dummy id", "past")
     val result = Meeting.dao.insert(myMeeting)
     
     Ok("The new ID is " + result.getOrElse("FAILED").toString)
@@ -45,14 +47,17 @@ class Application(meetingService: MeetingService) extends Controller {
   }
   
    def populateMeetings = Action { request =>
-
+    
       MeetupImporter.pastMeetings.map { response =>
         	val ids = response.map(Meeting.dao.insert(_))
       }
+      
      Ok("")
   }
 
-  def pastTalks =  Meeting.findAll().filterNot( isDojo ).toList.reverse
+  def pastTalks = Await.result(fetchMeetings("past"), 10.seconds)
+  
+  // Meeting.findAll().filterNot( isDojo ).toList.reverse
 
 
   val timeout = Duration("3 seconds")

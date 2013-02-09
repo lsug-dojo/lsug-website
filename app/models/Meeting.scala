@@ -15,7 +15,9 @@ case class Meeting (
     description: String, 
     time: Date, 
     event_url: String,
-    event_id: String = "dummy"
+    event_id: String,
+    status: String,
+    timestamp: Date = new Date
     )
 
 object Meeting extends ModelCompanion[Meeting, ObjectId] {
