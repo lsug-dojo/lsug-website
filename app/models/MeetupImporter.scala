@@ -9,6 +9,10 @@ import concurrent.Future
 
 object MeetupImporter {
   
+  def isDojo(  meeting:Meeting ): Boolean = {
+      meeting.name.contains("ojo")
+  }
+  
  // julien's key (need to create one for the app)
   val key = "24a4b6977821146284c192b5d30"
   val groupId = "1562942"
@@ -21,7 +25,7 @@ object MeetupImporter {
     def buildEventsRequest: String = s"https://api.meetup.com/2/events?key=$key&group_id=$groupId&page=200&status=$status"
 
 
-    val meetings = Meeting.findAll().filter( _.status == status ).toList.reverse
+    val meetings = Meeting.findAll().filterNot( isDojo ).filter( _.status == status ).toList.reverse
 
     if (meetings.size > 0) {
       println("returing cached values")
