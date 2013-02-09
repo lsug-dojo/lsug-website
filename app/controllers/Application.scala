@@ -27,10 +27,11 @@ class Application(meetingService: MeetingService) extends Controller {
     Ok("The new ID is " + result.getOrElse("FAILED").toString)
   }
   
-//  with securesocial.core.SecureSocial{
-  
-  // this key seems to work for http://gentle-fortress-6657.herokuapp.com/
-  def meetupId = "iago84cbrp1qrt76d5ur8b22rn"
+    // this key seems to work for http://gentle-fortress-6657.herokuapp.com/
+    //def meetupId = "iago84cbrp1qrt76d5ur8b22rn"
+    
+    // for lsug.org
+    def meetupId = "8hb7m06tmkrv44thc9q2qvtcc3"
 
   def index = Action { implicit request =>
     Ok(views.html.index(nextTalk ))
