@@ -21,7 +21,13 @@ case class Meeting (
     )
 
 object Meeting extends ModelCompanion[Meeting, ObjectId] {
-  val dao = new SalatDAO[Meeting, ObjectId](collection = mongoCollection("meetings")) {}
+
+  val dao = new SalatDAO[Meeting, ObjectId](collection = mongoCollection("meetings2")) {}
+  
+  dao.collection.dropIndexes()
+  dao.collection.ensureIndex(DBObject("timestamp" -> 1, "expireAfterSeconds" -> 90))
+  
+  
   def findOneByName(name: String): Option[Meeting] = dao.findOne(MongoDBObject("name" -> name))
 }
 

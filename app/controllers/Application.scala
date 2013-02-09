@@ -4,11 +4,11 @@ import play.api.mvc._
 import services.{MockMeetingService, MeetingService}
 import models._
 import java.util.Date
+import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import concurrent.{Await, Future}
 import concurrent.duration.Duration
 import models.MeetupImporter.fetchMeetings
-import scala.concurrent.duration._
 
 // case class Event(id: String, time: Long, rsvp: Int, title: String, description: String) {
 //   def descriptionHtml = new Html(description)
@@ -60,22 +60,18 @@ class Application(meetingService: MeetingService) extends Controller {
   // Meeting.findAll().filterNot( isDojo ).toList.reverse
 
 
-  val timeout = Duration("3 seconds")
+  val timeout = Duration("6 seconds")
 
   def upcomingMeetings: Seq[Meeting] = {
     val f = MeetupImporter.upcomingMeetings
-    Await.result( f, timeout ).filterNot( isDojo ).reverse.tail
+    Await.result( f, timeout ).reverse.tail
   }
 
   def nextTalk: Meeting = {
     val f = MeetupImporter.upcomingMeetings
-    Await.result( f, timeout).filterNot( isDojo ).reverse.head
+    Await.result(f, timeout).reverse.head
   }
-
-
-  def isDojo(  meeting:Meeting ): Boolean = {
-      meeting.name.contains("ojo")
-  }
+  
 
   def monthName(n:Int):String = {
     val months = new java.text.DateFormatSymbols().getShortMonths
