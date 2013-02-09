@@ -14,24 +14,20 @@ object MeetupImporter {
   val groupId = "1562942"
     
 
-  def pastMeetings = {
-    def buildEventsRequest: String = """https://api.meetup.com/2/events?key="""+key+"&group_id="+groupId+"&page=200&status=past"
+  def pastMeetings = fetchMeetings("past")
 
-    def getAllMeetingsResponse = WS.url(buildEventsRequest).get()
+    
+  def fetchMeetings(status: String): Future[Seq[Meeting]] = {
+    def buildEventsRequest: String = s"https://api.meetup.com/2/events?key=$key&group_id=$groupId&page=200&status=$status"
 
-    getAllMeetingsResponse.map( response => {
-    	    val meetings = (response.json \  "results").asOpt[Seq[JsValue]]
-    	    
-    	    meetings match {
-    	      case Some(seq) => seq.reverse.map(parseJsonMeeting(_))
-    	      case _ => Nil
-    	    }
-     })
-  }
-  
 
-  def upcomingMeetings:Future[Seq[Meeting]] = {
-    def buildEventsRequest: String = """https://api.meetup.com/2/events?key="""+key+"&group_id="+groupId+"&page=200&status=upcoming"
+    val meetings = Meeting.findAll().filter( _.status == status ).toList.reverse
+
+    if (meetings.size > 0) {
+      println("returing cached values")
+      return Future { meetings }
+    }
+    println("cache miss")
 
     def getAllMeetingsResponse = {
       val upcomingURL = buildEventsRequest
@@ -41,7 +37,6 @@ object MeetupImporter {
 
     getAllMeetingsResponse.map( response => {
       val meetings = (response.json \  "results").asOpt[Seq[JsValue]]
-      //println(s"$meetings")
 
       meetings match {
         case Some(seq) => seq.reverse.map(parseJsonMeeting(_))
@@ -50,6 +45,7 @@ object MeetupImporter {
     })
   }
 
+  def upcomingMeetings: Future[Seq[Meeting]] = fetchMeetings("upcoming")
 
   def parseJsonMeeting(value : JsValue): Meeting = {
     val name = (value \ "name").asOpt[String]
@@ -57,11 +53,16 @@ object MeetupImporter {
     val eventUrl = (value \ "event_url").asOpt[String]
     val date = (value \ "time").asOpt[Long]
     val id = (value \ "id").asOpt[String]
-    println(s"Response for $name, $id")
+    val status = (value \ "status").asOpt[String]
 
-    (name, description, date, eventUrl, id) match {
-      case (Some(n), Some(desc), Some(timestamp), Some(url), Some(id)) =>  Meeting(n, desc, new Date(timestamp), url, id)
-      case _ => throw new IllegalStateException("Invalid meeting")
+    (name, description, date, eventUrl, id, status) match {
+
+      case (Some(n), Some(desc), Some(timestamp), Some(url), Some(id), Some(st)) =>  
+          val m = Meeting(n, desc, new Date(timestamp), url, id, st)
+          Meeting.dao.insert(m)
+          println(s"inserted $status $name")
+          m
+        case _ => throw new IllegalStateException("Invalid meeting")
     }
 
   }
