@@ -1,31 +1,31 @@
 package models
 
-
 import play.api.libs.ws._
 import play.api.libs.json.JsValue
 import play.api.Play
 import java.util.Date
 import scala.concurrent.ExecutionContext.Implicits.global
 import concurrent.Future
+import play.api.cache.Cache
+import Play.current
 
 object MeetupImporter {
-  
-  def isDojo(  meeting:Meeting ): Boolean = {
-      meeting.name.contains("ojo")
+
+  def isDojo(meeting: Meeting): Boolean = {
+    meeting.name.contains("ojo")
   }
-  
+
   val configuration = Play.current.configuration
   val key = configuration.getString("meetup.key")
   val groupId = configuration.getString("meetup.groupId")
 
-  def pastMeetings = fetchMeetings("past")
+  def pastMeetings: Future[Seq[Meeting]] = getMeetings("past")
+  def upcomingMeetings: Future[Seq[Meeting]] = getMeetings("upcoming")
 
-    
-  def fetchMeetings(status: String): Future[Seq[Meeting]] = {
-    def buildEventsRequest: String = s"https://api.meetup.com/2/events?key=$key&group_id=$groupId&page=200&status=$status"
+  def getMeetings(status: String): Future[Seq[Meeting]] = {
+    val eventsUrl = s"https://api.meetup.com/2/events?key=$key&group_id=$groupId&page=200&status=$status"
 
-
-    val meetings = Meeting.findAll().filterNot( isDojo ).filter( _.status == status ).toList.reverse
+    val meetings = Meeting.findAll().filterNot(isDojo).filter(_.status == status).toList.reverse
 
     if (meetings.size > 0) {
       println("returing cached values")
@@ -34,13 +34,13 @@ object MeetupImporter {
     println("cache miss")
 
     def getAllMeetingsResponse = {
-      val upcomingURL = buildEventsRequest
+      val upcomingURL = eventsUrl
       println("Meetup Upcoming: " + upcomingURL)
-      WS.url( upcomingURL ).get()
+      WS.url(upcomingURL).get()
     }
 
-    getAllMeetingsResponse.map( response => {
-      val meetings = (response.json \  "results").asOpt[Seq[JsValue]]
+    getAllMeetingsResponse.map(response => {
+      val meetings = (response.json \ "results").asOpt[Seq[JsValue]]
 
       meetings match {
         case Some(seq) => seq.reverse.map(parseJsonMeeting(_))
@@ -49,9 +49,7 @@ object MeetupImporter {
     })
   }
 
-  def upcomingMeetings: Future[Seq[Meeting]] = fetchMeetings("upcoming")
-
-  def parseJsonMeeting(value : JsValue): Meeting = {
+  def parseJsonMeeting(value: JsValue): Meeting = {
     val name = (value \ "name").asOpt[String]
     val description = (value \ "description").asOpt[String]
     val eventUrl = (value \ "event_url").asOpt[String]
@@ -61,12 +59,12 @@ object MeetupImporter {
 
     (name, description, date, eventUrl, id, status) match {
 
-      case (Some(n), Some(desc), Some(timestamp), Some(url), Some(id), Some(st)) =>  
-          val m = Meeting(n, desc, new Date(timestamp), url, id, st)
-          Meeting.dao.insert(m)
-          println(s"inserted $status $name")
-          m
-        case _ => throw new IllegalStateException("Invalid meeting")
+      case (Some(n), Some(desc), Some(timestamp), Some(url), Some(id), Some(st)) =>
+        val m = Meeting(n, desc, new Date(timestamp), url, id, st)
+        Meeting.dao.insert(m)
+        println(s"inserted $status $name")
+        m
+      case _ => throw new IllegalStateException("Invalid meeting")
     }
 
   }
