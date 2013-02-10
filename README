@@ -16,6 +16,8 @@ export LSUG_MEETUP_ID="8hb7m06tmkrv44thc9q2qvtcc3"
 // alternatively for http://localhost:9000
 export LSUG_MEETUP_ID="6uaao0sbsmt6u6rj17v4lu5u9"
 
+export LSUG_MONGODB_DEFAULT_URI="your value"
+
 We decided to go with environment variables instead of command line arguments.
 
 
