@@ -25,14 +25,6 @@ object MeetupImporter {
   def getMeetings(status: String): Future[Seq[Meeting]] = {
     val eventsUrl = s"https://api.meetup.com/2/events?key=$key&group_id=$groupId&page=200&status=$status"
 
-    val meetings = Meeting.findAll().filterNot(isDojo).filter(_.status == status).toList.reverse
-
-    if (meetings.size > 0) {
-      println("returing cached values")
-      return Future { meetings }
-    }
-    println("cache miss")
-
     def getAllMeetingsResponse = {
       val upcomingURL = eventsUrl
       println("Meetup Upcoming: " + upcomingURL)
@@ -60,10 +52,8 @@ object MeetupImporter {
     (name, description, date, eventUrl, id, status) match {
 
       case (Some(n), Some(desc), Some(timestamp), Some(url), Some(id), Some(st)) =>
-        val m = Meeting(n, desc, new Date(timestamp), url, id, st)
-        Meeting.dao.insert(m)
-        println(s"inserted $status $name")
-        m
+        Meeting(n, desc, new Date(timestamp), url, id, st)
+
       case _ => throw new IllegalStateException("Invalid meeting")
     }
 
