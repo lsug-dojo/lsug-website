@@ -1,7 +1,6 @@
 This is your new Play 2.0 application
 =====================================
 
-
 Required Environment Variables
 ------------------------------
 
@@ -19,6 +18,14 @@ export LSUG_MEETUP_ID="6uaao0sbsmt6u6rj17v4lu5u9"
 export LSUG_MONGODB_DEFAULT_URI="your value"
 
 We decided to go with environment variables instead of command line arguments.
+
+
+Environment Variables on Heroku
+-------------------------------
+
+You can configure environment variables in heroku and use "foreman start" locally to run the app as it would run on heroku.
+
+https://devcenter.heroku.com/articles/config-vars
 
 
 Configuring MongoLabs with Play
