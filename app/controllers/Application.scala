@@ -10,28 +10,24 @@ import concurrent.{Await, Future}
 import concurrent.duration.Duration
 import models.MeetupImporter.fetchMeetings
 
-// case class Event(id: String, time: Long, rsvp: Int, title: String, description: String) {
-//   def descriptionHtml = new Html(description)
-// }
+import play.api.Play
 
 
 // Neo4j link
 // http://b51498187:fd6b46e88@5701820d8.hosted.neo4j.org:7976
 
 class Application(meetingService: MeetingService) extends Controller {
-
+  
   def dummy = Action {implicit request =>
     val myMeeting = Meeting("A dummy meeting", "past meeting stored in Mongo", new Date(), "www.meetup.com", "dummy id", "past")
     val result = Meeting.dao.insert(myMeeting)
     
     Ok("The new ID is " + result.getOrElse("FAILED").toString)
   }
-  
-    // this key seems to work for http://gentle-fortress-6657.herokuapp.com/
-    //def meetupId = "iago84cbrp1qrt76d5ur8b22rn"
     
-    // for lsug.org
-    def meetupId = "8hb7m06tmkrv44thc9q2qvtcc3"
+    
+    def meetupId = Play.current.configuration.getString("meetup.meetupId")
+    
 
   def index = Action { implicit request =>
     Ok(views.html.index(nextTalk ))

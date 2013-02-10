@@ -3,6 +3,7 @@ package models
 
 import play.api.libs.ws._
 import play.api.libs.json.JsValue
+import play.api.Play
 import java.util.Date
 import scala.concurrent.ExecutionContext.Implicits.global
 import concurrent.Future
@@ -13,10 +14,9 @@ object MeetupImporter {
       meeting.name.contains("ojo")
   }
   
- // julien's key (need to create one for the app)
-  val key = "24a4b6977821146284c192b5d30"
-  val groupId = "1562942"
-    
+  val configuration = Play.current.configuration
+  val key = configuration.getString("meetup.key")
+  val groupId = configuration.getString("meetup.groupId")
 
   def pastMeetings = fetchMeetings("past")
 
