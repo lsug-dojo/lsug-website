@@ -11,17 +11,18 @@ import Play.current
 
 object MeetupImporter {
 
-  def isDojo(meeting: Meeting): Boolean = {
-    meeting.name.contains("ojo")
-  }
-
   val configuration = Play.current.configuration
   val key = configuration.getString("meetup.key")
   val groupId = configuration.getString("meetup.groupId")
 
   def pastMeetings: Future[Seq[Meeting]] = getMeetings("past")
+  
   def upcomingMeetings: Future[Seq[Meeting]] = getMeetings("upcoming")
 
+  def isDojo(meeting: Meeting): Boolean = {
+    meeting.name.contains("ojo")
+  }
+  
   def getMeetings(status: String): Future[Seq[Meeting]] = {
     val eventsUrl = s"https://api.meetup.com/2/events?key=$key&group_id=$groupId&page=200&status=$status"
 
@@ -58,5 +59,4 @@ object MeetupImporter {
     }
 
   }
-
 }
