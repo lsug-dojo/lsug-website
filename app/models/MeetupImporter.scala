@@ -12,8 +12,8 @@ import Play.current
 object MeetupImporter {
 
   val configuration = Play.current.configuration
-  val key = configuration.getString("meetup.key")
-  val groupId = configuration.getString("meetup.groupId")
+  val key = configuration.getString("meetup.key").get
+  val groupId = configuration.getString("meetup.groupId").get
 
   def pastMeetings: Future[Seq[Meeting]] = getMeetings("past")
   
@@ -28,7 +28,6 @@ object MeetupImporter {
 
     def getAllMeetingsResponse = {
       val upcomingURL = eventsUrl
-      println("Meetup Upcoming: " + upcomingURL)
       WS.url(upcomingURL).get()
     }
 
@@ -36,7 +35,7 @@ object MeetupImporter {
       val meetings = (response.json \ "results").asOpt[Seq[JsValue]]
 
       meetings match {
-        case Some(seq) => seq.reverse.map(parseJsonMeeting(_))
+        case Some(seq) => seq.reverse.map(parseJsonMeeting(_)) filterNot isDojo
         case _ => Nil
       }
     })

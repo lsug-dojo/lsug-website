@@ -39,7 +39,7 @@ class Application(meetingService: MeetingService) extends Controller {
 
   }
   def pastTalks = Await.result(getMeetings("past"), 10.seconds)
-  val timeout = Duration("6 seconds")
+  val timeout = 20.seconds
 
   def upcomingMeetings: Seq[Meeting] = {
     val f = MeetupImporter.upcomingMeetings
