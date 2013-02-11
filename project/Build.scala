@@ -21,8 +21,10 @@ object ApplicationBuild extends Build {
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
       lessEntryPoints <<= baseDirectory(_ / "app" / "assets" / "stylesheets" ** "main.less"),
-      resolvers += "sonatype repository" at "http://oss.sonatype.org/content/repositories/snapshots",
-      resolvers += "typesafe artefactory" at "http://typesafe.artifactoryonline.com/typesafe/repo"
+      resolvers ++= Seq(
+              "sonatype repository" at "http://oss.sonatype.org/content/repositories/snapshots",
+              "typesafe artefactory" at "http://typesafe.artifactoryonline.com/typesafe/repo",
+              "jgit-repository" at "http://download.eclipse.org/jgit/maven"
+              )
   )
-
 }
