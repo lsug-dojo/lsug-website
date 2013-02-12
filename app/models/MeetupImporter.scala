@@ -5,7 +5,8 @@ import play.api.libs.json.JsValue
 import play.api.Play
 import java.util.Date
 import scala.concurrent.ExecutionContext.Implicits.global
-import concurrent.Future
+import scala.concurrent.{ Await, Future }
+import scala.concurrent.duration._
 import play.api.cache.Cache
 import Play.current
 
@@ -14,31 +15,25 @@ object MeetupImporter {
   val configuration = Play.current.configuration
   val key = configuration.getString("meetup.key").get
   val groupId = configuration.getString("meetup.groupId").get
+  val timeout = 20.seconds
 
   def pastMeetings: Future[Seq[Meeting]] = getMeetings("past")
-  
+
   def upcomingMeetings: Future[Seq[Meeting]] = getMeetings("upcoming")
 
   def isDojo(meeting: Meeting): Boolean = {
     meeting.name.contains("ojo")
   }
-  
+
   def getMeetings(status: String): Future[Seq[Meeting]] = {
     val eventsUrl = s"https://api.meetup.com/2/events?key=$key&group_id=$groupId&page=200&status=$status"
 
-    def getAllMeetingsResponse = {
-      val upcomingURL = eventsUrl
-      WS.url(upcomingURL).get()
-    }
-
-    getAllMeetingsResponse.map(response => {
-      val meetings = (response.json \ "results").asOpt[Seq[JsValue]]
-
-      meetings match {
-        case Some(seq) => seq.reverse.map(parseJsonMeeting(_)) filterNot isDojo
+    WS.url(eventsUrl).get() map { response =>
+      (response.json \ "results").asOpt[Seq[JsValue]] match {
+        case Some(seq) => seq.reverse map { parseJsonMeeting(_) } filterNot isDojo
         case _ => Nil
       }
-    })
+    }
   }
 
   def parseJsonMeeting(value: JsValue): Meeting = {

@@ -29,5 +29,8 @@ object Meeting extends ModelCompanion[Meeting, ObjectId] {
   //dao.collection.ensureIndex(DBObject("timestamp" -> 1, "expireAfterSeconds" -> 90))
   
   def findOneByName(name: String): Option[Meeting] = dao.findOne(MongoDBObject("name" -> name))
+  
+  val dummy = Meeting("No meeting scheduled", "", new Date, "http://lsug.org", "", "future")
+  
 }
 

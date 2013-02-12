@@ -1,10 +1,14 @@
 package services
-import models.Meeting
+import models.{ Meeting, MeetupImporter }
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 trait MeetingService {
-  
-  def current : Meeting
-  def past : Seq[Meeting]
-  def future : Seq[Meeting]
+  def past: Future[Seq[Meeting]]
+  def future: Future[Seq[Meeting]]
+}
 
+object ConcreteMeetingService extends MeetingService {
+  override def past = MeetupImporter.getMeetings("past")
+  override def future = MeetupImporter.getMeetings("upcoming")
 }
