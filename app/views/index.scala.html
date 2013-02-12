@@ -51,6 +51,20 @@
     }
     </div>
 
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s); js.id=id;js.async=true;js.src="https://secure.meetup.com/890357987448484755600/script/api/mu.btns.js?id=@Application.meetupId";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","mu-bootjs");</script>
+
+
+<script>
+!function(d,s,id){
+    var js,fjs=d.getElementsByTagName(s)[0];
+    if(!d.getElementById(id)){js=d.createElement(s);
+        js.id=id;js.async=true;
+        js.src="https://secure.meetup.com/890357987448484755600/script/api/mu.btns.js?id=@Application.meetupId";
+        fjs.parentNode.insertBefore(js,fjs);
+    }
+}(document,"script","mu-bootjs");
+</script>
+<!-- the script above destroys jquery `$`  for some unknown reason, therefore we import it once again here -->
+<script src='@routes.Assets.at("javascripts/jquery-1.7.1.min.js")' type="text/javascript"></script>
+<script src='@routes.Assets.at("javascripts/jquery.github.min.js")' type="text/javascript"></script>
 
 }
