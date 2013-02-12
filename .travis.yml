@@ -1,10 +1,6 @@
 language: scala # to trigger the build on a 'jvm-otp' travis worker
 env:
-  - PLAY_VERSION=2.1.0
-  - LSUG_MEETUP_GROUP_ID=x
-  - LSUG_MEETUP_KEY=x
-  - LSUG_MEETUP_ID=x
-  - LSUG_MONGODB_DEFAULT_URI=x
+  - PLAY_VERSION=2.1.0 LSUG_MEETUP_GROUP_ID=x LSUG_MEETUP_KEY=x LSUG_MEETUP_ID=x LSUG_MONGODB_DEFAULT_URI=x
  
 before_script:
   - wget http://downloads.typesafe.com/play/${PLAY_VERSION}/play-${PLAY_VERSION}.zip
