@@ -48,6 +48,9 @@ class Application(meetingService: MeetingService) extends Controller {
 
   val dateFormat = new SimpleDateFormat("yyyy MMM")
   def formatDate(d: Date): String = dateFormat.format(d)
+  
+  val eventDateFormat = new SimpleDateFormat("dd MMM yyyy, h a")
+  def formatEventTime(d: Date): String = eventDateFormat.format(d)
 
   def monthName(n: Int): String = {
     val months = new java.text.DateFormatSymbols().getShortMonths
