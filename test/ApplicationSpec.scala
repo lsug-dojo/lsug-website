@@ -14,6 +14,7 @@ class ApplicationSpec extends Specification {
     "health check on /" in {
       //val result = controllers.Application.index(FakeRequest())
       //status(result) must equalTo(OK)
+      done
     }
   }
 

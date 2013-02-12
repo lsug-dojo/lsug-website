@@ -43,11 +43,13 @@ class Application(meetingService: MeetingService) extends Controller {
 
   def upcomingMeetings: Seq[Meeting] = {
     val f = MeetupImporter.upcomingMeetings
+    // TODO: upcoming meetings can be empty list
     Await.result(f, timeout).reverse.tail
   }
 
   def nextTalk: Meeting = {
     val f = MeetupImporter.upcomingMeetings
+     // TODO: upcoming meetings can be empty list
     Await.result(f, timeout).reverse.head
   }
 
