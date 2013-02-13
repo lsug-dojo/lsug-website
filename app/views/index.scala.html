@@ -1,15 +1,15 @@
-@(fullName: String = "Scala User")
+@(upcomingMeetings: Seq[Meeting], pastMeetings: Seq[Meeting])
 
-@import models._
 @import scala.concurrent.ExecutionContext.Implicits.global
+@import models._
 
 
-@main("Welcome to London Scala User Group", fullName) {
+@main("Welcome to London Scala User Group", "Scala User") {
 
     <h2>Upcoming Meetings</h2>
 
     <div class="row">
-    @Application.upcomingMeetings.map { meeting =>
+    @upcomingMeetings.map { meeting =>
         <div class="span9 meeting current">
                 <h3>@meeting.name</h3>
                 <h4>@Application.formatEventTime(meeting.time)
@@ -24,7 +24,7 @@
     <h2>Past Meetings</h2>
 
     <div class="accordion" id="accordion2">
-    @Application.pastTalks.zipWithIndex.map { pm =>
+    @pastMeetings.zipWithIndex.map { pm =>
         <div class="accordion-group">
             <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href=' @( "#collapseOne" + pm._2 )'>

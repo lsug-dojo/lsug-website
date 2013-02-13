@@ -13,6 +13,7 @@ import play.api.cache.Cached
 import play.api.Play
 import play.api.Play.current
 import java.text.SimpleDateFormat
+import services.{ MeetingService, ConcreteMeetingService }
 
 // Neo4j
 // http://b51498187:fd6b46e88@5701820d8.hosted.neo4j.org:7976
@@ -20,7 +21,8 @@ import java.text.SimpleDateFormat
 // MongoDB
 // mongodb://heroku_app8030104:u37aro46ggr991mvgdmb5on5n9@ds037987.mongolab.com:37987/heroku_app8030104
 
-class Application(meetingService: MeetingService) extends Controller {
+trait Application extends Controller {
+  def meetingService: MeetingService
 
   val timeout = 20.seconds
   val configuration = Play.current.configuration
@@ -29,7 +31,7 @@ class Application(meetingService: MeetingService) extends Controller {
 
   def index = Cached("index", cacheSeconds) {
     Action {
-      Ok(views.html.index())
+      Ok(views.html.index(upcomingMeetings, pastMeetings))
     }
   }
 
@@ -42,13 +44,13 @@ class Application(meetingService: MeetingService) extends Controller {
     Ok("Jobs")
   }
 
-  def pastTalks = Await.result(meetingService.past, timeout)
+  def pastMeetings: Seq[Meeting] = Await.result(meetingService.past, timeout)
 
-  def upcomingMeetings = Await.result(meetingService.future, timeout) reverse
+  def upcomingMeetings: Seq[Meeting] = Await.result(meetingService.upcoming, timeout) reverse
 
   val dateFormat = new SimpleDateFormat("yyyy MMM")
   def formatDate(d: Date): String = dateFormat.format(d)
-  
+
   val eventDateFormat = new SimpleDateFormat("dd MMM yyyy, h a")
   def formatEventTime(d: Date): String = eventDateFormat.format(d)
 
@@ -58,6 +60,6 @@ class Application(meetingService: MeetingService) extends Controller {
   }
 }
 
-object Application extends Application(ConcreteMeetingService) {
-
+object Application extends Application {
+  override def meetingService = ConcreteMeetingService
 }
