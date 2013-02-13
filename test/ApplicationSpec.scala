@@ -14,7 +14,6 @@ object MockApplication extends Application {
 class ApplicationSpec extends Specification {
 
   "Application" should {
-
     "format Date with year and month" in new WithApplication {
       val application = MockApplication
       val d = new Date(0)
@@ -25,14 +24,27 @@ class ApplicationSpec extends Specification {
 
 class TemplateSpec extends Specification {
 
-  "The index page" should {
-
+  "Index page" should {
     "display the right title" in new WithApplication {
       val pastMeetings: Seq[Meeting] = Seq.empty
       val upcomingMeetings: Seq[Meeting] = Seq.empty
-
       val html = views.html.index(pastMeetings, upcomingMeetings)
       html.toString must contain("London")
     }
   }
 }
+
+// this test takes 14 s on my computer
+/*
+class HomePageSpec extends Specification {
+  "HomePage" should {
+    "have all the main menus" in {
+      running(TestServer(3333), HTMLUNIT) {
+        browser =>
+          browser.goTo("http://localhost:3333/")
+          browser.$("ul.nav a").first.getText must equalTo("About")
+      }
+    }
+  }
+}
+*/

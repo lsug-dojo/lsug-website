@@ -21,9 +21,8 @@ import services.{ MeetingService, ConcreteMeetingService }
 // MongoDB
 // mongodb://heroku_app8030104:u37aro46ggr991mvgdmb5on5n9@ds037987.mongolab.com:37987/heroku_app8030104
 
-trait Application extends Controller {
+trait Application extends Controller with Formatting {
   def meetingService: MeetingService
-
   val timeout = 20.seconds
   val configuration = Play.current.configuration
   def meetupId = configuration.getString("meetup.meetupId")
@@ -45,21 +44,20 @@ trait Application extends Controller {
   }
 
   def pastMeetings: Seq[Meeting] = Await.result(meetingService.past, timeout)
-
   def upcomingMeetings: Seq[Meeting] = Await.result(meetingService.upcoming, timeout) reverse
-
-  val dateFormat = new SimpleDateFormat("yyyy MMM")
-  def formatDate(d: Date): String = dateFormat.format(d)
-
-  val eventDateFormat = new SimpleDateFormat("dd MMM yyyy, h a")
-  def formatEventTime(d: Date): String = eventDateFormat.format(d)
-
-  def monthName(n: Int): String = {
-    val months = new java.text.DateFormatSymbols().getShortMonths
-    months(n)
-  }
 }
 
 object Application extends Application {
   override def meetingService = ConcreteMeetingService
+}
+
+trait Formatting {
+  val dateFormat = new SimpleDateFormat("yyyy MMM")
+  val eventDateFormat = new SimpleDateFormat("dd MMM yyyy, h a")
+  def formatDate(d: Date): String = dateFormat.format(d)
+  def formatEventTime(d: Date): String = eventDateFormat.format(d)
+  def monthName(n: Int): String = {
+    val months = new java.text.DateFormatSymbols().getShortMonths
+    months(n)
+  }
 }
