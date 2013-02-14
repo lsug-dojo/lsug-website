@@ -1,7 +1,7 @@
 This is your new Play 2.0 application
 =====================================
 
-Required Environment Variables
+Optional Environment Variables
 ------------------------------
 
 The app can run with the default settings from conf/application.conf. 
