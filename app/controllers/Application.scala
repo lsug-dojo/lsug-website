@@ -25,10 +25,8 @@ trait Application extends Controller with Formatting {
   def meetingService: MeetingService
   val timeout = 20.seconds
   val configuration = Play.current.configuration
-  def meetupId = configuration.getString("meetup.meetupId")
-  println(meetupId)
- 
   val cacheSeconds = configuration.getInt("cache.seconds").get
+  def meetupId = configuration.getString("meetup.meetupId")
 
   def index = Cached("index", cacheSeconds) {
     Action {
