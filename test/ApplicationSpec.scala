@@ -11,6 +11,8 @@ object MockApplication extends Application {
   override val meetingService = MockMeetingService
 }
 
+// TODO: use `WithApplication(FakeApplication(additionalConfiguration = inMemoryDatabase())`
+
 class ApplicationSpec extends Specification {
 
   "Application" should {
@@ -34,7 +36,8 @@ class TemplateSpec extends Specification {
   }
 }
 
-// this test takes 14 s on my computer
+// this test takes 14 s on my computer and the test server
+// is not shutting down afterwards
 /*
 class HomePageSpec extends Specification {
   "HomePage" should {
