@@ -1,11 +1,33 @@
 This is your new Play 2.0 application
 =====================================
 
-This file will be packaged with your application, when using `play dist`.
+Optional Environment Variables
+------------------------------
 
+The app can run with the default settings from conf/application.conf. 
+
+export LSUG_MEETUP_GROUP_ID="..."
+export LSUG_MEETUP_KEY="..."
+
+# for http://lsug.org
+export LSUG_MEETUP_ID="8hb7m06tmkrv44thc9q2qvtcc3"
+
+# alternatively for http://localhost:9000
+export LSUG_MEETUP_ID="6uaao0sbsmt6u6rj17v4lu5u9"
+
+export LSUG_MONGODB_DEFAULT_URI="..."
+
+
+Environment Variables on Heroku
+-------------------------------
+
+You can configure environment variables in heroku and use "foreman start" locally to run the app as it would run on heroku.
+
+https://devcenter.heroku.com/articles/config-vars
 
 
 Configuring MongoLabs with Play
+-------------------------------
 
 How to configure MongoDB with Play when running MongoLabs addon in Heroku.
 
@@ -29,8 +51,6 @@ Or do you also need to include it in your play framework configuration in config
 # ~~~~~
 # a MongoURI can also be used http://www.mongodb.org/display/DOCS/Connections
 # mongodb.default.uri = "mongodb://127.0.0.1:27017,mongodb.org:1337/salat-test"
-# mongodb.uri="mongodb://127.0.0.1:27017/heroku_app8030104"
-mongodb.default.uri="mongodb://heroku_app8030104:u37aro46ggr991mvgdmb5on5n9@ds037987.mongolab.com:37987/heroku_app8030104"
 
 
 Using the universal resource indicator directly in the application.conf will work when running play2 / mongo application on your development machine and heroku.  However, there is an obvious issue that you may not want to change the contents of your app on heroku and use the same db for both environments leads to this issue.
