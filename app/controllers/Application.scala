@@ -1,7 +1,6 @@
 package controllers
 
 import play.api.mvc._
-import services.{ MeetingService, MockMeetingService, ConcreteMeetingService }
 import models._
 import java.util.Date
 import scala.concurrent.duration._
@@ -13,7 +12,7 @@ import play.api.cache.Cached
 import play.api.Play
 import play.api.Play.current
 import java.text.SimpleDateFormat
-import services.{ MeetingService, ConcreteMeetingService }
+import services.MeetingService
 
 // Neo4j
 // http://b51498187:fd6b46e88@5701820d8.hosted.neo4j.org:7976
@@ -22,7 +21,7 @@ import services.{ MeetingService, ConcreteMeetingService }
 // mongodb://heroku_app8030104:u37aro46ggr991mvgdmb5on5n9@ds037987.mongolab.com:37987/heroku_app8030104
 
 class Application extends Controller with Formatting {
-  def meetingService = ConcreteMeetingService
+  def meetingService = MeetingService
   val configuration = Play.current.configuration
   val cacheSeconds = configuration.getInt("cache.seconds").get
   def meetupId = configuration.getString("meetup.meetupId")
@@ -33,7 +32,7 @@ class Application extends Controller with Formatting {
         for (
           u <- meetingService.upcoming;
           p <- meetingService.past
-        ) yield Ok(views.html.index(u, p))
+        ) yield Ok(views.html.index(u reverse, p))
       }
     }
   }
@@ -49,9 +48,7 @@ class Application extends Controller with Formatting {
 
 }
 
-object Application extends Application {
-  override def meetingService = ConcreteMeetingService
-}
+object Application extends Application
 
 trait Formatting {
   val dateFormat = new SimpleDateFormat("yyyy MMM")

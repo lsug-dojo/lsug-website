@@ -10,7 +10,7 @@ trait MeetingService {
   def upcoming: Future[Seq[Meeting]]
 }
 
-object ConcreteMeetingService extends MeetingService {
+object MeetingService extends MeetingService {
   override def past = MeetupImporter.getMeetings("past")
   override def upcoming = MeetupImporter.getMeetings("upcoming")
 }
