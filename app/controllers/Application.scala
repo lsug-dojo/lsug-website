@@ -23,14 +23,18 @@ import services.{ MeetingService, ConcreteMeetingService }
 
 trait Application extends Controller with Formatting {
   def meetingService: MeetingService
-  val timeout = 20.seconds
   val configuration = Play.current.configuration
   val cacheSeconds = configuration.getInt("cache.seconds").get
   def meetupId = configuration.getString("meetup.meetupId")
 
   def index = Cached("index", cacheSeconds) {
     Action {
-      Ok(views.html.index(upcomingMeetings, pastMeetings))
+      Async {
+        for (
+          u <- meetingService.upcoming;
+          p <- meetingService.past
+        ) yield Ok(views.html.index(u, p))
+      }
     }
   }
 
@@ -43,8 +47,6 @@ trait Application extends Controller with Formatting {
     Ok("Jobs")
   }
 
-  def pastMeetings: Seq[Meeting] = Await.result(meetingService.past, timeout)
-  def upcomingMeetings: Seq[Meeting] = Await.result(meetingService.upcoming, timeout) reverse
 }
 
 object Application extends Application {
