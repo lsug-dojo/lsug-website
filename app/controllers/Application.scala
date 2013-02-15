@@ -32,7 +32,7 @@ class Application extends Controller with Formatting {
         for (
           u <- meetingService.upcoming;
           p <- meetingService.past
-        ) yield Ok(views.html.index(u reverse, p))
+        ) yield Ok(views.html.index(u, p reverse))
       }
     }
   }

@@ -30,7 +30,7 @@ object MeetupImporter {
 
     WS.url(eventsUrl).get() map { response =>
       (response.json \ "results").asOpt[Seq[JsValue]] match {
-        case Some(seq) => seq.reverse map { parseJsonMeeting(_) } filterNot isDojo
+        case Some(seq) => seq map { parseJsonMeeting(_) } filterNot isDojo
         case _ => Nil
       }
     }
