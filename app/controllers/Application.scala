@@ -21,8 +21,8 @@ import services.{ MeetingService, ConcreteMeetingService }
 // MongoDB
 // mongodb://heroku_app8030104:u37aro46ggr991mvgdmb5on5n9@ds037987.mongolab.com:37987/heroku_app8030104
 
-trait Application extends Controller with Formatting {
-  def meetingService: MeetingService
+class Application extends Controller with Formatting {
+  def meetingService = ConcreteMeetingService
   val configuration = Play.current.configuration
   val cacheSeconds = configuration.getInt("cache.seconds").get
   def meetupId = configuration.getString("meetup.meetupId")
