@@ -12,7 +12,7 @@ import play.api.cache.Cached
 import play.api.Play
 import play.api.Play.current
 import java.text.SimpleDateFormat
-import services.MeetingService
+import services.{RssService, MeetingService}
 
 // Neo4j
 // http://b51498187:fd6b46e88@5701820d8.hosted.neo4j.org:7976
@@ -22,6 +22,7 @@ import services.MeetingService
 
 class Application extends Controller with Formatting {
   def meetingService = MeetingService
+  def rssService = RssService
   val configuration = Play.current.configuration
   val cacheSeconds = configuration.getInt("cache.seconds").get
   def meetupId = configuration.getString("meetup.meetupId")
@@ -42,8 +43,14 @@ class Application extends Controller with Formatting {
     Ok(views.html.iframewrapper(groupname))
   }
 
-  def jobs = Action {
-    Ok("Jobs")
+  def jobs = Cached("jobs", cacheSeconds) {
+    Action {
+      Async {
+        for (
+          jobList <- rssService.nextItems("https://groups.google.com/group/london-scala-jobs/feed/rss_v2_0_msgs.xml")
+        ) yield Ok(views.html.jobs(jobList))
+      }
+    }
   }
 
 }
