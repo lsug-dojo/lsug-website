@@ -20,7 +20,7 @@ case class Meeting (
     venue: Venue,
     timestamp: Date = new Date
     )
-case class Venue(name:String="", address:String="", city:String="", country:String="", lat:String="0", lon:String="0")
+case class Venue(var name:String="", var address:String="", var city:String="", var country:String="", lat:String="0", lon:String="0")
 
 object Meeting extends ModelCompanion[Meeting, ObjectId] {
 

@@ -33,7 +33,8 @@ class Application extends Controller with Formatting {
         for (
           u <- meetingService.upcoming;
           p <- meetingService.past
-        ) yield Ok(views.html.index(u, p reverse))
+        ) yield Ok(views.html.index(u.map { u1 => u1.venue.name = u1.venue.name.replaceAll("\"",""); u1.venue.address = u1.venue.address.replaceAll("\"",""); u1.venue.city = u1.venue.city.replaceAll("\"",""); u1.venue.country = u1.venue.country.replaceAll("\"",""); u1 },
+          p reverse))
       }
     }
   }
