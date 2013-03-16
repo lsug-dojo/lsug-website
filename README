@@ -15,7 +15,7 @@ Add the following lines to ~/.sbt/plugins/build.sbt or PROJECT_DIR/project/plugi
 addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.2.0")
 3/ Create idea project files
 ./sbt gen-idea
-4/ Open project in IDA
+4/ Open project in IDEA
 
 This is your new Play 2.0 application
 =====================================
