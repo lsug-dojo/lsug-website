@@ -43,12 +43,13 @@ object MeetupImporter {
     val date = (value \ "time").asOpt[Long]
     val id = (value \ "id").asOpt[String]
     val status = (value \ "status").asOpt[String]
+    val venue =
+      Venue((value \ "venue" \ "name").toString(), (value \ "venue" \ "address_1").toString(), (value \ "venue" \ "city").toString(),
+        (value \ "venue" \ "country").toString(), (value \ "venue" \ "lat").toString(), (value \ "venue" \ "lon").toString())
 
     (name, description, date, eventUrl, id, status) match {
-
       case (Some(n), Some(desc), Some(timestamp), Some(url), Some(id), Some(st)) =>
-        Meeting(n, desc, new Date(timestamp), url, id, st)
-
+        Meeting(n, desc, new Date(timestamp), url, id, st, venue)
       case _ => throw new IllegalStateException("Invalid meeting")
     }
 

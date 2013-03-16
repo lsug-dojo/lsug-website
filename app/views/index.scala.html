@@ -6,17 +6,29 @@
 
 @main("Welcome to London Scala User Group", "Scala User") {
 
+    <script type="text/javascript">
+        showMap = function(imgId, imgSrc) {
+            document.getElementById(imgId).src = imgSrc;
+            document.getElementById(imgId).style.display = 'inline';
+        }
+    </script>
     <h2>Upcoming Meetings</h2>
 
     <div class="row">
     @upcomingMeetings.map { meeting =>
         <div class="span9 meeting current">
-                <h3>@meeting.name</h3>
-                <h4>@Application.formatEventTime(meeting.time)
-                <a style="margin-left: 10px" href="http://www.meetup.com/london-scala/events/@meeting.event_id/"
-                        data-event="@meeting.event_id" class="mu-rsvp-btn">RSVP</a></h4>
-                <p> @Html(meeting.description) </p>
-            </div>
+            <h3>@meeting.name</h3>
+            <h4>Time: @Application.formatEventTime(meeting.time)
+            <a style="margin-left: 10px" href="http://www.meetup.com/london-scala/events/@meeting.event_id/"
+               data-event="@meeting.event_id" class="mu-rsvp-btn">RSVP</a></h4>
+            <p>Location: @Html(meeting.venue.name) - @Html(meeting.venue.address), @Html(meeting.venue.city)
+                <a href="javascript:void(0)"
+                        onclick="showMap('meeting_@Html(meeting.event_id)', 'http://maps.googleapis.com/maps/api/staticmap?center=@Html(meeting.venue.lat),@Html(meeting.venue.lon)&zoom=13&size=300x300&markers=color:green%7Ccolor:red%7Clabel:S%7C@Html(meeting.venue.lat),@Html(meeting.venue.lon)&sensor=false'); return false;">
+                    (map)
+                </a>
+            </p>
+            <p> <img id="meeting_@Html(meeting.event_id)" width="300" height="300" style="display:none" /></p>
+            <p> @Html(meeting.description) </p>
         </div>
     }
     </div>
