@@ -1,0 +1,22 @@
+@(jobList: Seq[Item])
+
+@import models._
+
+@main("London Scala User Job Board", "Scala User" ) {
+
+    <h2>Job Board</h2>
+
+    <div class="row">
+        @jobList.map { job =>
+            <div class="span9">
+                <h3><a href="@job.url">@job.title</a></h3>
+                <div>
+                    @Html(job.text)<br/>
+                    <br>
+                    <b>Date:</b> @job.date - <b>More details:</b> <a href="@job.url">Link</a>
+                </div>
+            </div>
+        }
+    </div>
+
+}
