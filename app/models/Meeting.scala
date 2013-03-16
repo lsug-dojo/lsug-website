@@ -17,8 +17,10 @@ case class Meeting (
     event_url: String,
     event_id: String,
     status: String,
+    venue: Venue,
     timestamp: Date = new Date
     )
+case class Venue(name:String="", address:String="", city:String="", country:String="", lat:String="0", lon:String="0")
 
 object Meeting extends ModelCompanion[Meeting, ObjectId] {
 
@@ -30,7 +32,7 @@ object Meeting extends ModelCompanion[Meeting, ObjectId] {
   
   def findOneByName(name: String): Option[Meeting] = dao.findOne(MongoDBObject("name" -> name))
   
-  val dummy = Meeting("No meeting scheduled", "", new Date, "http://lsug.org", "", "future")
+  val dummy = Meeting("No meeting scheduled", "", new Date, "http://lsug.org", "", "future", Venue())
   
 }
 
