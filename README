@@ -1,3 +1,11 @@
+Prerequisites
+=============
+
+Install play on MacOS using homebrew
+------------------------------------
+brew install --devel play
+
+
 This is your new Play 2.0 application
 =====================================
 
